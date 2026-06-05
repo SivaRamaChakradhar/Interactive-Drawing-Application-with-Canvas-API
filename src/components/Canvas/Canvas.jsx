@@ -1,7 +1,7 @@
 import { useRef, useEffect, useState } from 'react';
 
 const Canvas = (props) => {
-    const { tool, color, brushSize, undoCount, ...rest } = props;
+    const { tool, color, brushSize, undoCount, clearCount, saveCount, selectedDrawing, exportCount, ...rest } = props;
     const canvasRef = useRef(null);
     const contextRef = useRef(null);
     const historyRef = useRef([]);
@@ -15,15 +15,90 @@ const Canvas = (props) => {
     }, [undoCount]);
 
     useEffect(() => {
+        clearCanvas();
+    }, [clearCount])
+
+    useEffect(() => {
+        if(saveCount === 0) return;
+        saveDrawings();
+    }, [saveCount])
+
+    useEffect(() => {
+        if(exportCount === 0) return;
+        exportPNG()
+    }, [exportCount])
+
+    const exportPNG = () => {
+        const canvas = canvasRef.current;
+        const dataURL = canvas.toDataURL("image/png")
+
+        const link = document.createElement('a');
+
+        link.href = dataURL;
+        link.download = `drawing-${Date.now()}.png`;
+
+        link.click()
+    }
+
+    useEffect(() => {
+        if (!selectedDrawing) return;
+
+        const canvas = canvasRef.current;
+        const context = contextRef.current;
+
+        if (!canvas || !context) return;
+
+        const image = new Image();
+
+        image.src = selectedDrawing;
+
+        image.onload = () => {
+            clearCanvas();
+
+            historyRef.current = [];
+
+            const scale = Math.min(
+                canvas.width / image.width,
+                canvas.height / image.height
+            );
+
+            const drawWidth = image.width * scale;
+            const drawHeight = image.height * scale;
+
+            const x = (canvas.width - drawWidth) / 2;
+            const y = (canvas.height - drawHeight) / 2;
+
+            context.drawImage(
+                image,
+                x,
+                y,
+                drawWidth,
+                drawHeight
+            );
+
+            saveState();
+        };
+    }, [selectedDrawing]);
+
+
+
+    useEffect(() => {
         const canvas = canvasRef.current;
         if (!canvas) return;
 
-        canvas.width = window.innerWidth * 2;
-        canvas.height = window.innerHeight * 2;
-        canvas.style.width = `${window.innerWidth}px`;
-        canvas.style.height = `${window.innerHeight}px`;
+        const rect = canvas.getBoundingClientRect();
+
+        canvas.width = rect.width;
+        canvas.height = rect.height;
         const context = canvas.getContext('2d');
-        context.scale(2, 2);
+        context.fillStyle = '#ffffff';
+
+        context.fillRect(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
         context.lineCap = 'round';
         context.lineWidth = brushSize;
         context.globalCompositeOperation = tool === 'eraser' ? 'destination-out' : 'source-over';
@@ -59,6 +134,39 @@ const Canvas = (props) => {
         historyRef.current.push(
             canvas.toDataURL()
         );
+    };
+
+    const saveDrawings = () => {
+        if (historyRef.current.length <= 1) {
+            alert('Draw something first');
+            return;
+        }
+        try {
+            const canvas = canvasRef.current;
+
+            if (!canvas) return;
+
+            const dataURL = canvas.toDataURL(
+                'image/jpeg',
+                0.5
+            );
+
+            const drawings = localStorage.getItem('drawings');
+
+            const drawingsArray =
+                drawings
+                    ? JSON.parse(drawings)
+                    : [];
+
+            drawingsArray.push(dataURL);
+
+            localStorage.setItem(
+                'drawings',
+                JSON.stringify(drawingsArray)
+            );
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     const undo = () => {
@@ -101,6 +209,32 @@ const Canvas = (props) => {
             context.restore();
         };
     }
+
+    const clearCanvas = () => {
+        const canvas = canvasRef.current;
+        const context = contextRef.current;
+
+        if (!canvas || !context) return;
+
+        context.clearRect(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+
+        context.fillStyle = '#ffffff';
+
+        context.fillRect(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+
+        historyRef.current = [];
+        saveState();
+    };
 
     const startDrawing = ({nativeEvent}) => {
         const {offsetX, offsetY} = nativeEvent;
