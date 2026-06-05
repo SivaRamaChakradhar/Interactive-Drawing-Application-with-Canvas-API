@@ -1,16 +1,114 @@
-# React + Vite
+# Interactive Drawing Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React-based drawing application built using the HTML5 Canvas API. Users can create drawings using multiple tools, save their work locally, reload saved drawings, and export artwork as PNG images.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+* Freehand drawing (Pen Tool)
+* Eraser Tool
+* Line Tool
+* Rectangle Tool
+* Circle Tool
+* Color Picker
+* Adjustable Brush Size
+* Undo Functionality
+* Clear Canvas
+* Save Drawings to Local Storage
+* Gallery View for Saved Drawings
+* Load Saved Drawings from Gallery
+* Export Drawings as PNG Images
 
-## React Compiler
+## Technologies Used
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+* React
+* JavaScript (ES6+)
+* HTML5 Canvas API
+* Tailwind CSS
+* Local Storage API
 
-## Expanding the ESLint configuration
+## Project Structure
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```text
+src/
+├── components/
+│   ├── Canvas/
+│   │   └── Canvas.jsx
+│   ├── Toolbar/
+│   │   └── Toolbar.jsx
+│   └── Gallery/
+│       └── Gallery.jsx
+├── App.jsx
+├── main.jsx
+└── index.css
+```
+
+## Installation
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/SivaRamaChakradhar/Interactive-Drawing-Application-with-Canvas-API
+```
+
+### 2. Navigate to the Project Directory
+
+```bash
+cd my-drawing-app
+```
+
+### 3. Install Dependencies
+
+```bash
+npm install
+```
+
+## Running the Project
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+Open your browser and visit:
+
+```text
+http://localhost:5173
+```
+
+## Build for Production
+
+```bash
+npm run build
+```
+
+## Preview Production Build
+
+```bash
+npm run preview
+```
+
+## Usage
+
+1. Select a drawing tool from the toolbar.
+2. Choose a color and brush size.
+3. Draw on the canvas.
+4. Use Undo to revert the last action.
+5. Use Clear to reset the canvas.
+6. Save drawings to store them in the gallery.
+7. Click a gallery thumbnail to load a saved drawing.
+8. Export the current drawing as a PNG file.
+
+## Future Enhancements
+
+* Redo Functionality
+* Shape Preview While Drawing
+* Delete Drawings from Gallery
+* Keyboard Shortcuts
+* Infinite Canvas Support
+* Backend Storage Integration
+* User Authentication
+
+## Author
+
+**Ramisetti Siva Rama Chakradhar**
