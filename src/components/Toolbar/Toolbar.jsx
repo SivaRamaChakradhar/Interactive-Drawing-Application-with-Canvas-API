@@ -65,7 +65,7 @@ const Toolbar = ({ tool, color, brushSize, setTool, setColor, setBrushSize, onUn
                     <span>Save</span>
                 </button>
                 <button
-                    data-testid="sexport-png-button"
+                    data-testid="exportport-png-button"
                     onClick={onExport}
                     type="button"
                     className={`flex h-20 w-20 flex-col items-center justify-center gap-2 rounded-3xl border px-3 py-2 text-xs transition-all duration-200`}>
